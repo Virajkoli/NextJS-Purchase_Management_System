@@ -1,13 +1,13 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   // State for adding users
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -23,9 +23,7 @@ export default function AdminDashboard() {
   const [positions, setPositions] = useState([]);
   const [statusMessage, setStatusMessage] = useState("");
 
-
   useEffect(() => {
-
     const fetchDepartments = async () => {
       try {
         const response = await fetch("/api/departments"); // API endpoint to fetch roles
@@ -34,7 +32,7 @@ export default function AdminDashboard() {
       } catch (err) {
         console.error("Failed to fetch Department:", err);
       }
-    }
+    };
     const fetchPositions = async () => {
       try {
         const response = await fetch("/api/positions"); // API endpoint to fetch roles
@@ -43,7 +41,7 @@ export default function AdminDashboard() {
       } catch (err) {
         console.error("Failed to fetch Postions:", err);
       }
-    }
+    };
     const fetchRoles = async () => {
       try {
         const response = await fetch("/api/roles"); // API endpoint to fetch roles
@@ -86,7 +84,17 @@ export default function AdminDashboard() {
       const response = await fetch("/api/addUsers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, username, email, password, role, gender, position, department, phone }),
+        body: JSON.stringify({
+          name,
+          username,
+          email,
+          password,
+          role,
+          gender,
+          position,
+          department,
+          phone,
+        }),
       });
 
       if (!response.ok) {
@@ -94,14 +102,24 @@ export default function AdminDashboard() {
         throw new Error(errorData.message || "Something went wrong");
       }
 
-      setStatusMessage("User Added successfully")
+      setStatusMessage("User Added successfully");
+      setTimeout(() => {
+        router.push("/dashboard/admin"); // Redirect to admin dashboard
+      }, 1000); // Delay for better UX
     } catch (err) {
       setStatusMessage(err.message);
     }
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="p-4 bg-gray-100 min-h-screen">
+      <Link
+        href={"/dashboard/admin"}
+        className="text-lg px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
+      >
+        Back to Dashboard
+      </Link>
+
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-center mb-6">Admin Dashboard</h1>
         <p className="text-center mb-4">Welcome, {session.user.username}!</p>
@@ -111,7 +129,10 @@ export default function AdminDashboard() {
           <h2 className="text-2xl font-semibold mb-4">Add New User</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Name
               </label>
               <input
@@ -124,7 +145,10 @@ export default function AdminDashboard() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <input
@@ -137,7 +161,10 @@ export default function AdminDashboard() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <input
@@ -150,7 +177,10 @@ export default function AdminDashboard() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -163,7 +193,10 @@ export default function AdminDashboard() {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="role"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Role
               </label>
               <select
@@ -182,7 +215,10 @@ export default function AdminDashboard() {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="gender"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Gender
               </label>
               <select
@@ -193,16 +229,15 @@ export default function AdminDashboard() {
                 required
               >
                 <option value="">Select a gender</option>
-                <option value="male">
-                  Male
-                </option>
-                <option value="female">
-                  Female
-                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="department"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Department
               </label>
               <select
@@ -221,7 +256,10 @@ export default function AdminDashboard() {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="position" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="position"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Position
               </label>
               <select
@@ -240,7 +278,10 @@ export default function AdminDashboard() {
               </select>
             </div>
             <div className="mb-4">
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Phone no.
               </label>
               <input
@@ -257,7 +298,7 @@ export default function AdminDashboard() {
               type="submit"
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
             >
-              Sign Up
+              Add
             </button>
           </form>
           {statusMessage && (
